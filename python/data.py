@@ -55,6 +55,7 @@ class Prep_Data:
             scaler = Normalizer()
         df[normalize_cols] = scaler.fit_transform(df[normalize_cols])
         return df
+    
     def translate_target(self, df):
         df['gender'] = df['gender'].replace({'f': 0, 'm': 1})
         return df

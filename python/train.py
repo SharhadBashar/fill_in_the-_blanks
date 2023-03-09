@@ -13,7 +13,8 @@ from sklearn.tree import DecisionTreeClassifier
 from sklearn.neural_network import MLPClassifier
 
 class Train:
-    def __init__(self, df_name, X, y, model_name, model_type = 'logistic_regression', model_path = None, csv_path = None):
+    def __init__(self, df_name, X, y, model_name, model_type = 'logistic_regression', 
+                model_path = None, csv_path = None, evaluate = False):
         self.model_type_dict = {
             'logistic_regression': LogisticRegression(),
             'sgd_classifier': SGDClassifier(),
@@ -24,13 +25,14 @@ class Train:
             'nn': MLPClassifier()
         }
         
-        self.model_path = model_path if csv_path else '../model/'
+        self.model_path = model_path if model_path else '../model/'
         self.csv_path = csv_path if csv_path else '../data/LFM/csv/'
         if not os.path.isdir(model_path):
             os.makedir(model_path)
         df = pd.read_csv(os.path.join(self.csv_path, df_name))
-        train_X, test_X, train_y, test_y = self.train_test_split(df, X, y)
-        self.evaluate(df, X, y, train_X, test_X, train_y, test_y, model_type)
+        if evaluate:
+            train_X, test_X, train_y, test_y = self.train_test_split(df, X, y)
+            self.evaluate(df, X, y, train_X, test_X, train_y, test_y, model_type)
         model = self.train(df[X], df[y])
         self.save_model(model, model_name, self.model_path)
         
